@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 500px;
+            max-width: 100%;
+        }
+        .quiz-header {
+            margin-bottom: 20px;
+        }
+        .quiz-header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .answers {
+            list-style-type: none;
+            padding: 0;
+        }
+        .answers li {
+            margin-bottom: 10px;
+        }
+        .answers li label {
+            font-size: 16px;
+        }
+        .submit-btn {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+        .result {
+            font-size: 20px;
+            color: #007bff;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="quiz-header">
+        <h1>JavaScript Quiz</h1>
+    </div>
+    <div id="quiz">
+        <div class="question">Question text</div>
+        <ul class="answers">
+            <li>
+                <input type="radio" name="answer" id="a" class="answer">
+                <label for="a" id="a_text">Answer A</label>
+            </li>
+            <li>
+                <input type="radio" name="answer" id="b" class="answer">
+                <label for="b" id="b_text">Answer B</label>
+            </li>
+            <li>
+                <input type="radio" name="answer" id="c" class="answer">
+                <label for="c" id="c_text">Answer C</label>
+            </li>
+            <li>
+                <input type="radio" name="answer" id="d" class="answer">
+                <label for="d" id="d_text">Answer D</label>
+            </li>
+        </ul>
+        <button class="submit-btn" onclick="submitAnswer()">Submit</button>
+    </div>
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "What does HTML stand for?",
+            a: "Hypertext Markup Language",
+            b: "Hyperlinks and Text Markup Language",
+            c: "Home Tool Markup Language",
+            d: "Hyperlinking Text Marking Language",
+            correct: "a"
+        },
+        {
+            question: "Which language is used for web apps?",
+            a: "PHP",
+            b: "Python",
+            c: "JavaScript",
+            d: "All",
+            correct: "d"
+        },
+        {
+            question: "How many tags are in a regular element?",
+            a: "2",
+            b: "1",
+            c: "3",
+            d: "4",
+            correct: "a"
+        },
+        {
+            question: "Which tag is used to create a hyperlink?",
+            a: "<a>",
+            b: "<link>",
+            c: "<nav>",
+            d: "<href>",
+            correct: "a"
+        },
+        {
+            question: "Which is a JavaScript Framework?",
+            a: "React",
+            b: "Laravel",
+            c: "Django",
+            d: "Sass",
+            correct: "a"
+        }
+    ];
+
+    let currentQuiz = 0;
+    let score = 0;
+
+    function loadQuiz() {
+        deselectAnswers();
+
+        const currentQuizData = quizData[currentQuiz];
+        document.querySelector('.question').innerText = currentQuizData.question;
+        document.getElementById('a_text').innerText = currentQuizData.a;
+        document.getElementById('b_text').innerText = currentQuizData.b;
+        document.getElementById('c_text').innerText = currentQuizData.c;
+        document.getElementById('d_text').innerText = currentQuizData.d;
+    }
+
+    function deselectAnswers() {
+        document.querySelectorAll('.answer').forEach(answerEl => answerEl.checked = false);
+    }
+
+    function getSelected() {
+        let answer;
+        document.querySelectorAll('.answer').forEach(answerEl => {
+            if (answerEl.checked) {
+                answer = answerEl.id;
+            }
+        });
+        return answer;
+    }
+
+    function submitAnswer() {
+        const answer = getSelected();
+        if (answer) {
+            if (answer === quizData[currentQuiz].correct) {
+                score++;
+            }
+
+            currentQuiz++;
+
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                document.getElementById('quiz').innerHTML = `
+                    <h2>You answered ${score}/${quizData.length} questions correctly</h2>
+                    <button class="submit-btn" onclick="location.reload()">Reload</button>
+                `;
+            }
+        }
+    }
+
+    // Load the first question
+    loadQuiz();
+</script>
+
+</body>
+</html>
